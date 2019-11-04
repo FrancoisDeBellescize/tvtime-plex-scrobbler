@@ -13,6 +13,7 @@ import json
 import httplib
 import base64
 import getpass
+import ssl
 
 class Tvst(object):
 
@@ -36,10 +37,11 @@ class Tvst(object):
 
     def _do_tvst_post(self, url, data):
 
+        context = ssl._create_unverified_context()
         f = urllib2.Request(url)
         f.add_header('User-Agent', self.USER_AGENT)
         try:
-            res = urllib2.urlopen(f, data)
+            res = urllib2.urlopen(f, data, context=context)
             return json.load(res)
         except urllib2.URLError, e:
             self.logger.error('Unable to submit post data {url} - {error}'.format(
